@@ -8,7 +8,7 @@
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<!-- My CSS -->
 	<link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="one.css">
+    <!-- <link rel="stylesheet" href="one.css"> -->
 
 	<title>AdminHub</title>
 </head>
@@ -56,7 +56,7 @@
 				</a>
 			</li> -->
 			<li>
-				<a href="#" class="logout">
+				<a href="login.html" class="logout"></a>
 					<i class='bx bxs-log-out-circle' ></i>
 					<span class="text">Logout</span>
 				</a>
@@ -65,88 +65,133 @@
 	</section>
 	<!-- SIDEBAR -->
 
-    	<!-- CONTENT -->
+   <!-- CONTENT -->
+   <section id="content">
+	<!-- NAVBAR -->
+	<nav>
+		<i class='bx bx-menu'></i>
+		<form action="#">
+			<div class="form-input"></div>
+		</form>
+		<input type="checkbox" id="switch-mode" hidden>
+		<label for="switch-mode" class="switch-mode"></label>
+		<span id="username-section"></span>
+	</nav>
+	<!-- NAVBAR -->
 
-	<section id="content">
-		<!-- NAVBAR -->
-		<nav>
-			<i class='bx bx-menu' ></i>
-			<!-- <a href="#" class="nav-link">Categories</a> -->
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
-				</div>
-			</form>
-			<input type="checkbox" id="switch-mode" hidden>
-			<label for="switch-mode" class="switch-mode"></label>
-			<!-- <a href="#" class="notification">
-				<i class='bx bxs-bell' ></i>
-				<span class="num">8</span>
-			</a> -->
-			<!-- <a href="#" class="profile">
-				<img src="img/people.png">
-			</a> -->
-		</nav>
-		<!-- NAVBAR -->
-
-        <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>My Task Organizer</title>
-
-	<link rel="stylesheet" href="main.css" />
-</head>
-<body>
-	
 	<header>
-		<h1>My Task Organizer</h1>
-		<form id="new-task-form">
-			<input 
-				type="text" 
-				name="new-task-input" 
-				id="new-task-input" 
-				placeholder="What do you have planned?" />
+		<h1>User Management</h1>
+		<form id="new-user-form">
+			<div class="form-group">
+				<label for="new-username-input">Username:</label>
+				<input 
+					type="text" 
+					name="new-username-input" 
+					id="new-username-input" 
+					placeholder="Enter username" />
+			</div>
+			<div class="form-group">
+				<label for="new-password-input">Password:</label>
+				<input 
+					type="password"
+					name="new-password-input" 
+					id="new-password-input" 
+					placeholder="Enter password" />
+			</div>
 			<input 
 				type="submit"
-				id="new-task-submit" 
-				value="Add task" />
+				id="new-user-submit" 
+				value="Add user" />
 		</form>
 	</header>
 	<main>
-		<section class="task-list">
-			<h2>Tasks</h2>
-
-			<div id="tasks">
-
-				<div class="task">
-					<div class="content">
-						<input 
-							type="text" 
-							class="text" 
-							value="A new task"
-							readonly>
-					</div>
-					<div class="actions">
-						<button class="edit">Edit</button>
-						<button class="delete">Delete</button>
-					</div>
-				</div>
-
-			</div>
+		<section class="user-list">
+			<h2>Users</h2>
+			<div id="users"></div>
 		</section>
 	</main>
+</section>
 
-	<script src="one.js"></script>
+<script>
+	const newUserForm = document.getElementById('new-user-form');
+	const newUsernameInput = document.getElementById('new-username-input');
+	const newPasswordInput = document.getElementById('new-password-input');
+	const usersContainer = document.getElementById('users');
+	const usernameSection = document.getElementById('username-section');
+
+	// Event listener for adding a new user
+	newUserForm.addEventListener('submit', function(event) {
+		event.preventDefault();
+		const username = newUsernameInput.value;
+		const password = newPasswordInput.value;
+		addUser(username, password);
+		newUsernameInput.value = '';
+		newPasswordInput.value = '';
+	});
+
+	// Function to add a new user
+	function addUser(username, password) {
+		const userElement = document.createElement('div');
+		userElement.classList.add('user');
+		userElement.innerHTML = `
+			<div class="content">
+				<span class="username">${username}</span>
+				<span class="password">${"*".repeat(password.length)}</span>
+			</div>
+			<div class="actions">
+				<button class="edit">Edit</button>
+				<button class="delete">Delete</button>
+			</div>
+		`;
+		usersContainer.appendChild(userElement);
+
+		// Add event listeners for edit and delete buttons
+		const editButton = userElement.querySelector('.edit');
+		const deleteButton = userElement.querySelector('.delete');
+
+		editButton.addEventListener('click', function() {
+			editUser(userElement);
+		});
+
+		deleteButton.addEventListener('click', function() {
+			deleteUser(userElement);
+		});
+
+		// Update the username section in the navigation bar
+		usernameSection.textContent = username;
+	}
+
+	// Function to edit a user
+	function editUser(userElement) {
+		const usernameElement = userElement.querySelector('.username');
+		const passwordElement = userElement.querySelector('.password');
+
+		usernameElement.contentEditable = true;
+		passwordElement.contentEditable = true;
+		usernameElement.classList.add('editable');
+		passwordElement.classList.add('editable');
+		usernameElement.focus();
+
+		usernameElement.addEventListener('blur', function() {
+			usernameElement.contentEditable = false;
+			usernameElement.classList.remove('editable');
+		});
+
+		passwordElement.addEventListener('blur', function() {
+			passwordElement.contentEditable = false;
+			passwordElement.classList.remove('editable');
+		});
+	}
+
+	// Function to delete a user
+	function deleteUser(userElement) {
+		userElement.remove();
+	}
+</script>
+<script src="script.js"></script>
 </body>
 </html>
 
-        <script src="script.js"></script>
-</body>
-</html>
 
 
 

@@ -50,7 +50,7 @@ input, button {
 }
 
 #new-task-input::placeholder {
-	color: #fff8e6;
+	color: #000;
 }
 
 #new-task-submit {
